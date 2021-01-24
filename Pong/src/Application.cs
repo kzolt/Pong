@@ -1,0 +1,84 @@
+﻿using System;
+using System.Collections.Generic;
+using OpenTK.Graphics.OpenGL4;
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.GraphicsLibraryFramework;
+using OpenTK.Windowing.Desktop;
+
+namespace Pong
+{
+	class Application : GameWindow
+	{
+		float[] m_Verticies =
+		{
+			-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+			 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+			 0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f
+		};
+
+		VertexBuffer m_VBO;
+		VertexArray m_VAO;
+
+		Shader m_Shader;
+
+		public Application(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
+			: base(gameWindowSettings, nativeWindowSettings)
+		{
+
+		}
+
+		protected override void OnLoad()
+		{
+			GL.ClearColor(0.2f, 0.3f, 0.5f, 1.0f);
+
+			m_VAO = new VertexArray();
+			m_VBO = new VertexBuffer(m_Verticies, m_Verticies.Length * sizeof(float));
+			m_VBO.SetLayout(new BufferLayout(new List<BufferElement> { 
+				new BufferElement(ShaderDataType.Float3, "a_Position"),
+				new BufferElement(ShaderDataType.Float4, "a_Color")
+			}));
+
+			m_VAO.AddVertexBuffer(m_VBO);
+
+			m_Shader = new Shader("res/shaders/basic.shader");
+			m_Shader.Bind();
+
+			base.OnLoad();
+		}
+
+		protected override void OnUnload()
+		{
+			base.OnUnload();
+		}
+
+		protected override void OnUpdateFrame(FrameEventArgs args)
+		{
+			if (KeyboardState.IsKeyDown(Keys.Escape))
+			{
+				Close();
+			}
+
+			base.OnUpdateFrame(args);
+		}
+
+		protected override void OnRenderFrame(FrameEventArgs args)
+		{
+			GL.Clear(ClearBufferMask.ColorBufferBit);
+
+			m_Shader.Bind();
+			m_VAO.Bind();
+
+			GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
+
+			SwapBuffers();
+
+			base.OnRenderFrame(args);
+		}
+
+		protected override void OnResize(ResizeEventArgs e)
+		{
+			GL.Viewport(0, 0, Size.X, Size.Y);
+			base.OnResize(e);
+		}
+	}
+}
