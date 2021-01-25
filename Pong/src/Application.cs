@@ -21,16 +21,16 @@ namespace Pong
 
 		Shader m_Shader;
 
+		Renderer m_Renderer;
+
 		public Application(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
 			: base(gameWindowSettings, nativeWindowSettings)
 		{
-
+			m_Renderer = new Renderer();
 		}
 
 		protected override void OnLoad()
 		{
-			GL.ClearColor(0.2f, 0.3f, 0.5f, 1.0f);
-
 			m_VAO = new VertexArray();
 			m_VBO = new VertexBuffer(m_Verticies, m_Verticies.Length * sizeof(float));
 			m_VBO.SetLayout(new BufferLayout(new List<BufferElement> { 
@@ -63,7 +63,7 @@ namespace Pong
 
 		protected override void OnRenderFrame(FrameEventArgs args)
 		{
-			GL.Clear(ClearBufferMask.ColorBufferBit);
+			m_Renderer.Clear();
 
 			m_Shader.Bind();
 			m_VAO.Bind();

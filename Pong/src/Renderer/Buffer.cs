@@ -116,6 +116,12 @@ namespace Pong
 			GL.NamedBufferData(m_RendererID, size, data, BufferUsageHint.DynamicDraw);
 		}
 
+		public VertexBuffer(int size)
+		{
+			GL.CreateBuffers(1, out m_RendererID);
+			GL.BindBuffer(BufferTarget.ArrayBuffer, m_RendererID);
+		}
+
 		~VertexBuffer()
 		{
 			GL.DeleteBuffers(1, ref m_RendererID);
@@ -124,6 +130,13 @@ namespace Pong
 		public void Bind()
 		{
 			GL.BindBuffer(BufferTarget.ArrayBuffer, m_RendererID);
+		}
+
+		public void SetData(float[] data, int size)
+		{
+			m_Size = size;
+
+			GL.NamedBufferSubData(m_RendererID, IntPtr.Zero, m_Size, data);
 		}
 
 		public void SetLayout(BufferLayout layout)
@@ -144,7 +157,7 @@ namespace Pong
 		int m_RendererID;
 		int m_Count;
 
-		public IndexBuffer(IntPtr data, int count)
+		public IndexBuffer(int[] data, int count)
 		{
 			GL.CreateBuffers(1, out m_RendererID);
 			GL.BindBuffer(BufferTarget.ElementArrayBuffer, m_RendererID);

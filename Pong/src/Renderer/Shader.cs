@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 
 using OpenTK.Graphics.OpenGL4;
+using OpenTK.Mathematics;
 
 namespace Pong
 {
@@ -14,7 +15,7 @@ namespace Pong
 	class Shader
 	{
 		int m_RendererID = 0;
-		Dictionary<string, int> m_UniformLocation = new Dictionary<string, int>();
+		Dictionary<string, int> m_UniformLocations = new Dictionary<string, int>();
 
 		public Shader(string filepath)
 		{
@@ -34,6 +35,31 @@ namespace Pong
 		public void Bind()
 		{
 			GL.UseProgram(m_RendererID);
+		}
+
+		public void UploadUniform(string name, float value)
+		{
+			GL.Uniform1(GetUniformLocation(name), value);
+		}
+
+		public void UploadUniform2(string name, Vector2 value)
+		{
+			GL.Uniform2(GetUniformLocation(name), value);
+		}
+
+		public void UploadUniform3(string name, Vector3 value)
+		{
+			GL.Uniform3(GetUniformLocation(name), value);
+		}
+
+		public void UploadUniform4(string name, Vector4 value)
+		{
+			GL.Uniform4(GetUniformLocation(name), value);
+		}
+
+		public void UploadMatrix4(string name, Matrix4 matrix)
+		{
+			GL.UniformMatrix4(GetUniformLocation(name), false, ref matrix);
 		}
 
 		Dictionary<int, string> PreProcess(string[] source)
@@ -97,6 +123,14 @@ namespace Pong
 				GL.DeleteShader(id);
 
 			m_RendererID = program;
+		}
+		
+		int GetUniformLocation(string name)
+		{
+			if (!m_UniformLocations.ContainsKey(name))
+				m_UniformLocations[name] = GL.GetUniformLocation(m_RendererID, name);
+
+			return m_UniformLocations[name];
 		}
 
 		static ShaderType ShaderTypeFromString(string type)
