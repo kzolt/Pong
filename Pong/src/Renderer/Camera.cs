@@ -31,5 +31,10 @@ namespace Pong
 			Matrix4 translate = Matrix4.CreateTranslation(Position);
 			ViewMatrix = translate.Inverted();
 		}
+
+		public Matrix4 GetViewProjection()
+		{
+			return ViewMatrix * ProjectionMatrix;
+		}
 	}
 }

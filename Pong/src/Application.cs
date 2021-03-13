@@ -20,13 +20,14 @@ namespace Pong
 		VertexArray m_VAO;
 
 		Shader m_Shader;
-
 		Renderer m_Renderer;
+		Camera m_Camera;
 
 		public Application(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
 			: base(gameWindowSettings, nativeWindowSettings)
 		{
 			m_Renderer = new Renderer();
+			m_Camera = new Camera(OpenTK.Mathematics.Matrix4.CreateOrthographicOffCenter(-9.0f, 9.0f, -16.0f, 16.0f, -1.0f, 1.0f));
 		}
 
 		protected override void OnLoad()
@@ -66,6 +67,7 @@ namespace Pong
 			m_Renderer.Clear();
 
 			m_Shader.Bind();
+			m_Shader.UploadMatrix4("u_ViewProjection", m_Camera.ViewMatrix);
 			m_VAO.Bind();
 
 			GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
