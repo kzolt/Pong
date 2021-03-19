@@ -26,6 +26,9 @@ namespace Pong
 			GL.DeleteVertexArrays(1, ref m_RendererID);
 		}
 
+		public List<VertexBuffer> GetVertexBuffers() { return m_VertexBuffers; }
+		public IndexBuffer GetIndexBuffer() { return m_IndexBuffer; }
+
 		public void Bind()
 		{
 			GL.BindVertexArray(m_RendererID);

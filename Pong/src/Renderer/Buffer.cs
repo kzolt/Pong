@@ -157,8 +157,10 @@ namespace Pong
 		int m_RendererID;
 		int m_Count;
 
-		public IndexBuffer(int[] data, int count)
+		public IndexBuffer(uint[] data, int count)
 		{
+			m_Count = count;
+
 			GL.CreateBuffers(1, out m_RendererID);
 			GL.BindBuffer(BufferTarget.ElementArrayBuffer, m_RendererID);
 			GL.NamedBufferData(m_RendererID, sizeof(uint) * count, data, BufferUsageHint.StaticDraw);
@@ -173,6 +175,8 @@ namespace Pong
 		{
 			GL.BindBuffer(BufferTarget.ElementArrayBuffer, m_RendererID);
 		}
+
+		public int GetCount() { return m_Count; }
 	}
 
 }

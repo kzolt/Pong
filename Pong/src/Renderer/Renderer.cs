@@ -57,9 +57,9 @@ namespace Pong
 			m_Data.QuadVertexArray.AddVertexBuffer(m_Data.QuadVertexBuffer);
 			m_Data.QuadVertexBufferBase = new QuadVertex[RendererData.MaxVertices];
 
-			int[] quadIndices = new int[RendererData.MaxIndices];
+			uint[] quadIndices = new uint[RendererData.MaxIndices];
 
-			int offset = 0;
+			uint offset = 0;
 			for (int i = 0; i < RendererData.MaxIndices; i += 6)
 			{
 				quadIndices[i + 0] = offset + 0;

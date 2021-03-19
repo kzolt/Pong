@@ -9,44 +9,44 @@ namespace Pong
 {
 	class Application : GameWindow
 	{
-		//float[] m_Verticies =
-		//{
-		//	-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-		//	 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-		//	 0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f
-		//};
-
-		float[] m_Verticies =
+		
+		float[] squareVerticies =
 		{
-			-5.0f, -5.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-			 5.0f, -5.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-			 0.0f,  5.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f
+			-2.0f, -2.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+			 2.0f, -2.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+			 2.0f,  2.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+			-2.0f,  2.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f
 		};
 
 		VertexBuffer m_VBO;
 		VertexArray m_VAO;
+		IndexBuffer m_IBO;
 
 		Shader m_Shader;
-		Renderer m_Renderer;
+		BasicRenderer m_Renderer;
 		Camera m_Camera;
 
 		public Application(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
 			: base(gameWindowSettings, nativeWindowSettings)
 		{
-			m_Renderer = new Renderer();
+			m_Renderer = new BasicRenderer();
 			m_Camera = new Camera(OpenTK.Mathematics.Matrix4.CreateOrthographicOffCenter(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f));
 		}
 
 		protected override void OnLoad()
 		{
 			m_VAO = new VertexArray();
-			m_VBO = new VertexBuffer(m_Verticies, m_Verticies.Length * sizeof(float));
+			m_VBO = new VertexBuffer(squareVerticies, squareVerticies.Length * sizeof(float));
 			m_VBO.SetLayout(new BufferLayout(new List<BufferElement> { 
 				new BufferElement(ShaderDataType.Float3, "a_Position"),
 				new BufferElement(ShaderDataType.Float4, "a_Color")
 			}));
 
 			m_VAO.AddVertexBuffer(m_VBO);
+
+			uint[] squareIndices = { 0, 1, 2, 2, 3, 0 };
+			m_IBO = new IndexBuffer(squareIndices, squareIndices.Length);
+			m_VAO.SetIndexBuffer(m_IBO);
 
 			m_Shader = new Shader("res/shaders/basic.shader");
 			m_Shader.Bind();
@@ -72,12 +72,10 @@ namespace Pong
 		protected override void OnRenderFrame(FrameEventArgs args)
 		{
 			m_Renderer.Clear();
-
-			m_Shader.Bind();
-			m_Shader.UploadMatrix4("u_ViewProjection", m_Camera.GetViewProjection());
-			m_VAO.Bind();
-
-			GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
+			
+			m_Renderer.BeginScene(m_Camera, m_Shader);
+			m_Renderer.Submit(m_VAO);
+			m_Renderer.EndScene();
 
 			SwapBuffers();
 
