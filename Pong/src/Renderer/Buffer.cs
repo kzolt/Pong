@@ -132,11 +132,16 @@ namespace Pong
 			GL.BindBuffer(BufferTarget.ArrayBuffer, m_RendererID);
 		}
 
-		public void SetData(float[] data, int size)
+		public void SetData(QuadVertex[] data, int size)
 		{
 			m_Size = size;
 
-			GL.NamedBufferSubData(m_RendererID, IntPtr.Zero, m_Size, data);
+			int count = size / QuadVertex.SizeInBytes();
+			QuadVertex[] buffer = new QuadVertex[count];
+			for (int i = 0; i < count; i++)
+				buffer[i] = data[i];
+
+			GL.NamedBufferSubData(m_RendererID, IntPtr.Zero, m_Size, buffer);
 		}
 
 		public void SetLayout(BufferLayout layout)
