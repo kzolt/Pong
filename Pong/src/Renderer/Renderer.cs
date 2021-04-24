@@ -56,25 +56,25 @@ namespace Pong
 				new BufferElement(ShaderDataType.Float4, "a_Color")
 			}));
 			s_Data.QuadVertexArray.AddVertexBuffer(s_Data.QuadVertexBuffer);
-			s_Data.QuadVertexBufferBase = new QuadVertex[RendererData.MaxVertices];
+			s_Data.QuadVertexBufferBase = new QuadVertex[4];
 
 			uint[] quadIndices = new uint[RendererData.MaxIndices];
-
+			
 			uint offset = 0;
 			for (int i = 0; i < RendererData.MaxIndices; i += 6)
 			{
 				quadIndices[i + 0] = offset + 0;
 				quadIndices[i + 1] = offset + 1;
 				quadIndices[i + 2] = offset + 2;
-
+			
 				quadIndices[i + 3] = offset + 2;
 				quadIndices[i + 4] = offset + 3;
 				quadIndices[i + 5] = offset + 0;
-
+			
 				offset += 4;
 			}
 
-			IndexBuffer quadIB = new IndexBuffer(quadIndices, RendererData.MaxIndices);
+			IndexBuffer quadIB = new IndexBuffer(quadIndices, quadIndices.Length);
 			s_Data.QuadVertexArray.SetIndexBuffer(quadIB);
 
 			s_Data.Shader = new Shader("res/shaders/basic.shader");
@@ -109,8 +109,7 @@ namespace Pong
 		{
 			EndScene();
 
-			//s_Data.QuadIndexCount = 0;
-			//s_Data.QuadVertexBuffer
+
 		}
 
 		public static void Clear()
@@ -123,7 +122,7 @@ namespace Pong
 		{
 			const int quadVertexCount = 4;
 
-			Matrix4 transform = Matrix4.CreateTranslation(position) * Matrix4.CreateScale(new Vector3(size.X, size.Y, 0.0f));
+			Matrix4 transform = Matrix4.CreateTranslation(position) * Matrix4.CreateScale(new Vector3(size.X, size.Y, 1.0f));
 
 			for (int i = 0; i < quadVertexCount; i++)
 			{

@@ -120,6 +120,7 @@ namespace Pong
 		{
 			GL.CreateBuffers(1, out m_RendererID);
 			GL.BindBuffer(BufferTarget.ArrayBuffer, m_RendererID);
+			GL.NamedBufferData(m_RendererID, size, IntPtr.Zero, BufferUsageHint.DynamicDraw);
 		}
 
 		~VertexBuffer()
@@ -136,13 +137,9 @@ namespace Pong
 		{
 			m_Size = size;
 
-			int count = size / QuadVertex.SizeInBytes();
-			QuadVertex[] buffer = new QuadVertex[count];
-			for (int i = 0; i < count; i++)
-				buffer[i] = data[i];
-
-			GL.NamedBufferSubData(m_RendererID, IntPtr.Zero, m_Size, buffer);
+			GL.NamedBufferSubData(m_RendererID, IntPtr.Zero, size, data);
 		}
+
 
 		public void SetLayout(BufferLayout layout)
 		{
